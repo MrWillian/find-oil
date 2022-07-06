@@ -1,48 +1,64 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { FlatList, ListRenderItemInfo } from 'react-native';
 import Item from '../../components/PlaceItem';
-import { Container } from './styles';
-
-const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      institutionName: 'Back LTDA',
-      local: 'Rua Getúlio Vargas - S/N',
-      quantity: '100 Litros',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      institutionName: 'Itausa Holding SA',
-      local: 'Rua Das Amargosas - S/N',
-      quantity: '10 Litros',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      institutionName: 'Banco do Brasil',
-      local: 'Rua Das Amargosas - S/N',
-      quantity: '50 Litros',
-    },
-] as ItemProps[];
+import firestore from '@react-native-firebase/firestore';
 
 interface ItemProps {
     id: string;
-    institutionName: string;
-    local: string;
+    name: string;
     quantity: string;
+    city: string;
+    street: string;
+    cep: string;
 }
 
 const PlacesList = () => {
-    const renderItem = ({item}: ListRenderItemInfo<ItemProps>) => (
-      <Item institutionName={item.institutionName} local={item.local} quantity={item.quantity} />
-    );
+  const [points, setPoints] = useState<ItemProps[]>();
 
-    return (
-      <FlatList
-        style={{margin: 10}}
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id} />
-    );
+  useLayoutEffect(() => {
+    async function fetchData() {
+      try {
+        await firestore().collection('Points').orderBy('createdAt', 'desc').get().then(querySnapshot => {
+          console.log('querySnapshot', querySnapshot.docs);
+          let aux: ItemProps[] = [];
+
+          querySnapshot?.docs?.map(doc => {
+            const point = doc.data() as ItemProps;
+            aux.push({
+              id: doc.id,
+              name: point.name,
+              quantity: point.quantity,
+              city: point.city,
+              street: point.street,
+              cep: point.cep,
+            });
+          });
+          setPoints(aux);
+        });
+      } catch (error) {
+        console.log('ERROR - ', error);
+      }      
+    }
+    fetchData();
+  }, [points]);
+
+  const renderItem = ({item}: ListRenderItemInfo<ItemProps>) => (
+    <Item 
+      id={item.id}
+      name={item.name} 
+      quantity={item.quantity}  
+      city={item.city} 
+      street={item.street} 
+      cep={item.cep} />
+  );
+
+  return (
+    <FlatList
+      style={{margin: 10}}
+      data={points}
+      renderItem={renderItem}
+      keyExtractor={item => item.id} />
+  );
 }
 
 export default PlacesList;
