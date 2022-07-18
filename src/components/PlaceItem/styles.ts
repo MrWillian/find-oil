@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 
 export const Container = styled.View`
-    background-color: #EDEDED;
+    background-color: #2e096b;
     border-radius: 15px;
     padding: 10px;
     margin: 10px;
@@ -22,7 +22,7 @@ export const QuantityContainer = styled.View`
 `;
 
 export const Name = styled.Text`
-    color: #011438;
+    color: #ADACCB;
     font-weight: bold;
     font-size: 20px;
 `;
@@ -33,8 +33,9 @@ export const Local = styled.Text`
 `;
 
 export const Quantity = styled.Text`
-    color: #4442A4;
-    font-size: 20px;
+    color: #ADACCB;
+    font-size: 16px;
+    font-weight: bold;
 `;
 
 export const Arrow = styled.Text`
