@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { FlatList, ListRenderItemInfo } from 'react-native';
 import Item from '../../components/PlaceItem';
 import firestore from '@react-native-firebase/firestore';
@@ -16,31 +16,31 @@ const PlacesList = () => {
   const [points, setPoints] = useState<ItemProps[]>();
 
   useLayoutEffect(() => {
-    async function fetchData() {
-      try {
-        await firestore().collection('Points').orderBy('createdAt', 'desc').get().then(querySnapshot => {
-          console.log('querySnapshot', querySnapshot.docs);
-          let aux: ItemProps[] = [];
-
-          querySnapshot?.docs?.map(doc => {
-            const point = doc.data() as ItemProps;
-            aux.push({
-              id: doc.id,
-              name: point.name,
-              quantity: point.quantity,
-              city: point.city,
-              street: point.street,
-              cep: point.cep,
-            });
-          });
-          setPoints(aux);
-        });
-      } catch (error) {
-        console.log('ERROR - ', error);
-      }      
-    }
     fetchData();
   }, [points]);
+
+  async function fetchData() {
+    try {
+      await firestore().collection('Points').orderBy('createdAt', 'desc').get().then(querySnapshot => {
+        let aux: ItemProps[] = [];
+        
+        querySnapshot?.docs?.map(doc => {
+          const point = doc.data() as ItemProps;
+          aux.push({
+            id: doc.id,
+            name: point.name,
+            quantity: point.quantity,
+            city: point.city,
+            street: point.street,
+            cep: point.cep,
+          });
+        });
+        setPoints(aux);
+      });
+    } catch (error) {
+      console.log('ERROR - ', error);
+    }      
+  }
 
   const renderItem = ({item}: ListRenderItemInfo<ItemProps>) => (
     <Item 
@@ -54,7 +54,7 @@ const PlacesList = () => {
 
   return (
     <FlatList
-      style={{margin: 10}}
+      style={{marginTop: 30}}
       data={points}
       renderItem={renderItem}
       keyExtractor={item => item.id} />

@@ -12,14 +12,14 @@ interface ItemProps {
 
 const Item: React.FC<ItemProps> = ({ name, quantity, city, street, cep }) => {
     return (
-        <Container>
+        <Container elevation={10}>
             <InfoContainer>
                 <Name>{name}</Name>
-                <Local>{city} - {street}</Local>
-                <Local>{cep}</Local>
+                <Local>{street}</Local>
+                <Local>{city} - {cep}</Local>
             </InfoContainer>
             <QuantityContainer>
-                <Quantity>{quantity} Litros</Quantity>
+                <Quantity elevation={2}>{quantity} Litro(s)</Quantity>
                 {/* <Arrow>--{'>'}</Arrow> */}
             </QuantityContainer>
         </Container>
