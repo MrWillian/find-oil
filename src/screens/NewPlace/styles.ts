@@ -34,5 +34,7 @@ export const ErrorMessage = styled.Text`
     marginTop: 5
 `;
 
+export const RegisterButton = styled.Button``;
+
     // borderWidth: 1,
     // borderColor: 'rgba(200,0,50,1)'
