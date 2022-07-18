@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Alert, Button, GestureResponderEvent, Text, TextInput, View } from 'react-native';
+import { Alert, GestureResponderEvent, Text, TextInput, View } from 'react-native';
 import * as yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from './../../routes';
 
 import firestore from '@react-native-firebase/firestore';
+import LinearGradient from 'react-native-linear-gradient/index.android.js';
+import { RegisterButton } from './styles';
 
 const fieldValidationSchema = yup.object().shape({
     name: yup.string().required('O nome do estabelecimento não pode ser vazio'),
@@ -28,7 +30,6 @@ export default function NewPlace() {
     const navigation = useNavigation<NewPlaceScreenProp>();
 
     const handleSubmit = (event: GestureResponderEvent) => {
-        console.log('isValid', fieldValidationSchema.isValidSync({name, quantity, city, street, cep}));
         if (fieldValidationSchema.isValidSync({name, quantity, city, street, cep})) {
             const point = {name, quantity, city, street, cep, createdAt: Date.parse(Date.now().toString())};
             firestore().collection('Points').add(point).then(() => {
@@ -42,44 +43,57 @@ export default function NewPlace() {
     }
 
     return (
-        <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'grey'
-          }}>
-            <TextField
-                label={'Nome'}
-                // error={errors?.name}
-                placeholder={'Digite o nome do estabelecimento'}
-                onChangeText={text => setName(text)}
-            />
-            <TextField
-                label={'Quantidade (Litros)'}
-                // error={errors?.quantity}
-                placeholder={'Digite a quantidade'}
-                onChangeText={text => setQuantity(text)}
-            />
-            <TextField
-                label={'Cidade'}
-                // error={errors?.city}
-                placeholder={'Digite a cidade'}
-                onChangeText={text => setCity(text)}
-            />
-            <TextField
-                label={'Rua'}
-                // error={errors?.street}
-                placeholder={'Digite a rua'}
-                onChangeText={text => setStreet(text)}
-            />
-            <TextField
-                label={'CEP'}
-                // error={errors?.cep}
-                placeholder={'Digite o CEP'}
-                onChangeText={text => setCEP(text)}
-            />
-            <Button title={'Cadastrar'} onPress={handleSubmit} />
-        </View>
+        <LinearGradient
+            colors={['#110233', '#580979', '#4c258c']}
+            style={{
+                flex: 1,
+                width: '100%',
+                paddingLeft: 15,
+                paddingRight: 15,
+            }}>
+            <View style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <TextField
+                    label={'Nome'}
+                    // error={errors?.name}
+                    placeholder={'Digite o nome do estabelecimento'}
+                    onChangeText={text => setName(text)}
+                />
+                <TextField
+                    label={'Quantidade (Litros)'}
+                    // error={errors?.quantity}
+                    placeholder={'Digite a quantidade'}
+                    onChangeText={text => setQuantity(text)}
+                />
+                <TextField
+                    label={'Cidade'}
+                    // error={errors?.city}
+                    placeholder={'Digite a cidade'}
+                    onChangeText={text => setCity(text)}
+                />
+                <TextField
+                    label={'Rua'}
+                    // error={errors?.street}
+                    placeholder={'Digite a rua'}
+                    onChangeText={text => setStreet(text)}
+                />
+                <TextField
+                    label={'CEP'}
+                    // error={errors?.cep}
+                    placeholder={'Digite o CEP'}
+                    onChangeText={text => setCEP(text)}
+                />
+                <RegisterButton 
+                    style={{ fontSize: '20', fontWeight: 'bold', padding: '10', marginTop: '30' }}
+                    color="#2e096b" 
+                    fontSize="5" 
+                    title={'Cadastrar'} 
+                    onPress={handleSubmit} />
+            </View>
+        </LinearGradient>
     );
 }
 
@@ -90,7 +104,7 @@ const TextField = ({ label, ...inputProps }) => (
         marginBottom: 10
     }}>
         <Text style={{
-            fontSize: 14,
+            fontSize: 20,
             color: '#fff',
             marginBottom: 4
         }}>
@@ -99,7 +113,7 @@ const TextField = ({ label, ...inputProps }) => (
         <TextInput
             style={{
                 height: 40,
-                fontSize: 16,
+                fontSize: 18,
                 backgroundColor: '#fff',
                 paddingHorizontal: 8,
                 borderRadius: 8
